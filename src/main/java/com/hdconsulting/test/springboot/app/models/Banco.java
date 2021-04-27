@@ -1,5 +1,7 @@
 package com.hdconsulting.test.springboot.app.models;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import javax.persistence.*;
 
 @Entity

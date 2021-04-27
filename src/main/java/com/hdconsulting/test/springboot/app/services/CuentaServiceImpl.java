@@ -1,7 +1,7 @@
 package com.hdconsulting.test.springboot.app.services;
 
-import com.hdconsulting.test.springboot.app.dao.BancoDao;
-import com.hdconsulting.test.springboot.app.dao.CuentaDao;
+import com.hdconsulting.test.springboot.app.dao.BancoRepository;
+import com.hdconsulting.test.springboot.app.dao.CuentaRepository;
 import com.hdconsulting.test.springboot.app.models.Banco;
 import com.hdconsulting.test.springboot.app.models.Cuenta;
 import org.springframework.stereotype.Service;
@@ -11,44 +11,44 @@ import java.math.BigDecimal;
 @Service
 public class CuentaServiceImpl implements CuentaService {
 
-    private CuentaDao cuentaDao;
-    private BancoDao bancoDao;
+    private CuentaRepository cuentaRepository;
+    private BancoRepository bancoRepository;
 
-    public CuentaServiceImpl(CuentaDao cuentaDao, BancoDao bancoDao) {
-        this.cuentaDao = cuentaDao;
-        this.bancoDao = bancoDao;
+    public CuentaServiceImpl(CuentaRepository cuentaRepository, BancoRepository bancoRepository) {
+        this.cuentaRepository = cuentaRepository;
+        this.bancoRepository = bancoRepository;
     }
 
     @Override
     public Cuenta findById(Long id) {
-        return cuentaDao.findById(id);
+        return cuentaRepository.findById(id).orElseThrow();
     }
 
     @Override
     public int revisarTotalTransferencias(Long bancoId) {
-        return bancoDao.findById(bancoId).getTotalTransferencias();
+        return bancoRepository.findById(bancoId).orElseThrow().getTotalTransferencias();
     }
 
     @Override
     public BigDecimal revisarSaldo(Long cuentaId) {
-        return cuentaDao.findById(cuentaId).getSaldo();
+        return cuentaRepository.findById(cuentaId).orElseThrow().getSaldo();
     }
 
     @Override
     public void tranferir(Long numCuentaOrigen, Long numCuentaDestino, BigDecimal monto,
                           Long bancoId) {
 
-        Cuenta cuentaOring = cuentaDao.findById(numCuentaOrigen);
+        Cuenta cuentaOring = cuentaRepository.findById(numCuentaOrigen).orElseThrow();
         cuentaOring.debito(monto);
-        cuentaDao.update(cuentaOring);
+        cuentaRepository.save(cuentaOring);
 
-        Cuenta cuentaDestino = cuentaDao.findById(numCuentaDestino);
+        Cuenta cuentaDestino = cuentaRepository.findById(numCuentaDestino).orElseThrow();
         cuentaDestino.credito(monto);
-        cuentaDao.update(cuentaDestino);
+        cuentaRepository.save(cuentaDestino);
 
-        Banco banco = bancoDao.findById(bancoId);
+        Banco banco = bancoRepository.findById(bancoId).orElseThrow();
         int totalTransferencias = banco.getTotalTransferencias();
         banco.setTotalTransferencias(++totalTransferencias);
-        bancoDao.update(banco);
+        bancoRepository.save(banco);
     }
 }
