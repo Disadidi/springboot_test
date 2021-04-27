@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.hdconsulting.test.springboot.app.dao.BancoDao;
 import com.hdconsulting.test.springboot.app.dao.CuentaDao;
+import com.hdconsulting.test.springboot.app.models.Banco;
+import com.hdconsulting.test.springboot.app.models.Cuenta;
 import com.hdconsulting.test.springboot.app.services.CuentaService;
 import com.hdconsulting.test.springboot.app.services.CuentaServiceImpl;
 
@@ -52,7 +54,16 @@ class SpringbootTestApplicationTests {
 		assertEquals("900", saldoOrigen.toPlainString());
 		assertEquals("2100", saldoDestino.toPlainString());
 
+		int total = service.revisarTotalTransferencias(1L);
+		assertEquals(1, total);
 
+		//cuentaRepository.findById est appelé 3 fois par chaque argument (1L et 2L)
+		verify(cuentaRepository, times(3)).findById(1L);
+		verify(cuentaRepository, times(3)).findById(2L);
+		verify(cuentaRepository, times(2)).update(any(Cuenta.class));
+
+		verify(bancoRepository, times(2)).findById(1L);
+		verify(bancoRepository).update(any(Banco.class));
 	}
 
 }
