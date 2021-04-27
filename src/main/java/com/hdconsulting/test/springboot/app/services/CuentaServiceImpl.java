@@ -4,9 +4,11 @@ import com.hdconsulting.test.springboot.app.dao.BancoDao;
 import com.hdconsulting.test.springboot.app.dao.CuentaDao;
 import com.hdconsulting.test.springboot.app.models.Banco;
 import com.hdconsulting.test.springboot.app.models.Cuenta;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Service
 public class CuentaServiceImpl implements CuentaService {
 
     private CuentaDao cuentaDao;
