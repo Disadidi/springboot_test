@@ -32,7 +32,6 @@ public class CuentaController {
                 dto.getCuentaDestinoId(), dto.getMonto(),
                 dto.getBancoId());
         Map<String, Object> response = new HashMap<>();
-
         response.put("date", LocalDate.now().toString());
         response.put("status", "OK");
         response.put("mensaje", "Transferencia realizada con éxito!");
