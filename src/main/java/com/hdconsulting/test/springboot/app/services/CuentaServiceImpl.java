@@ -5,6 +5,7 @@ import com.hdconsulting.test.springboot.app.dao.CuentaRepository;
 import com.hdconsulting.test.springboot.app.models.Banco;
 import com.hdconsulting.test.springboot.app.models.Cuenta;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -20,21 +21,25 @@ public class CuentaServiceImpl implements CuentaService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Cuenta findById(Long id) {
         return cuentaRepository.findById(id).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int revisarTotalTransferencias(Long bancoId) {
         return bancoRepository.findById(bancoId).orElseThrow().getTotalTransferencias();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal revisarSaldo(Long cuentaId) {
         return cuentaRepository.findById(cuentaId).orElseThrow().getSaldo();
     }
 
     @Override
+    @Transactional()
     public void tranferir(Long numCuentaOrigen, Long numCuentaDestino, BigDecimal monto,
                           Long bancoId) {
 

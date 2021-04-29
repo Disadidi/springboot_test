@@ -67,7 +67,7 @@ public class IntegrationJpaTest {
 
         //Then
         assertEquals("Pepe", cuenta.getPersona());
-        assertEquals("3000", cuenta.getSaldo());
+        assertEquals("3000", cuenta.getSaldo().toPlainString());
 
     }
 
@@ -83,7 +83,7 @@ public class IntegrationJpaTest {
 
         //Then
         assertEquals("Pepe", cuenta.getPersona());
-        assertEquals("3000", cuenta.getSaldo());
+        assertEquals("3000", cuenta.getSaldo().toPlainString());
 
         //when
         cuenta.setSaldo(new BigDecimal("3800"));
@@ -92,7 +92,7 @@ public class IntegrationJpaTest {
         //then
         //Then
         assertEquals("Pepe", cuentaActualizada.getPersona());
-        assertEquals("3800", cuentaActualizada.getSaldo());
+        assertEquals("3800", cuentaActualizada.getSaldo().toPlainString());
     }
 
     @Test
