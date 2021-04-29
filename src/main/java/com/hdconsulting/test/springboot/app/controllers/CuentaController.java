@@ -36,7 +36,7 @@ public class CuentaController {
         response.put("date", LocalDate.now().toString());
         response.put("status", "OK");
         response.put("mensaje", "Transferencia realizada con éxito!");
-        response.put("transaction", dto);
+        response.put("transaccion", dto);
 
         return ResponseEntity.ok(response);
 
