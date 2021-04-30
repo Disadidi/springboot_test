@@ -38,6 +38,12 @@ public class CuentaController {
         return cuentaService.save(cuenta);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        cuentaService.deleteById(id);
+    }
+
     @PostMapping("/transferir")
     public ResponseEntity<?> tranferir(@RequestBody TransaccionDto dto) {
         cuentaService.tranferir(dto.getCuentaOrigenId(),
@@ -50,6 +56,5 @@ public class CuentaController {
         response.put("transaccion", dto);
 
         return ResponseEntity.ok(response);
-
     }
 }

@@ -150,7 +150,7 @@ class CuentaControllerWebTestClientTest {
 
                     assertEquals(2L, cuentas.get(1).getId());
                     assertEquals("Black", cuentas.get(1).getPersona());
-                    assertEquals("2100.0", cuentas.get(1).getSaldo());
+                    assertEquals("2100.0", cuentas.get(1).getSaldo().toPlainString());
                 })
         .hasSize(2);
     }
@@ -198,5 +198,30 @@ class CuentaControllerWebTestClientTest {
                     assertEquals("Pepa", c.getPersona());
                     assertEquals("3500", c.getSaldo().toPlainString());
                 });
+    }
+
+    @Test
+    @Order(8)
+    void testEliminar() {
+        client.get().uri("/api/cuentas").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBodyList(Cuenta.class)
+                .hasSize(4);
+
+        client.delete().uri("/api/cuentas/3")
+                .exchange()
+        .expectStatus().isNoContent()
+        .expectBody().isEmpty();
+
+        client.get().uri("/api/cuentas").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBodyList(Cuenta.class)
+                .hasSize(3);
+
+        client.get().uri("/api/cuentas/3").exchange()
+                .expectStatus().is5xxServerError();
+
     }
 }
