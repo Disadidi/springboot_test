@@ -106,6 +106,7 @@ class CuentaControllerWebTestClientTest {
                 .expectBody(Cuenta.class)
                 .consumeWith(response -> {
                     Cuenta cuenta = response.getResponseBody();
+                    assertNotNull(cuenta);
                     assertEquals("Black", cuenta.getPersona());
                     assertEquals("2100.00", cuenta.getSaldo().toPlainString());
                 });
@@ -221,7 +222,9 @@ class CuentaControllerWebTestClientTest {
                 .hasSize(3);
 
         client.get().uri("/api/cuentas/3").exchange()
-                .expectStatus().is5xxServerError();
+                //     .expectStatus().is5xxServerError();
+                .expectStatus().isNotFound()
+                .expectBody().isEmpty();
 
     }
 }
