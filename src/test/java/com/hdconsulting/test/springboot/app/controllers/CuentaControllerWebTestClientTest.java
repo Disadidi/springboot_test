@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hdconsulting.test.springboot.app.models.Cuenta;
 import com.hdconsulting.test.springboot.app.models.TransaccionDto;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -21,6 +20,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CuentaControllerWebTestClientTest {
 
@@ -35,6 +35,7 @@ class CuentaControllerWebTestClientTest {
     }
 
     @Test
+    @Order(1)
     void testTransferir() throws JsonProcessingException {
         //Given
         TransaccionDto dto = new TransaccionDto();
@@ -81,17 +82,21 @@ class CuentaControllerWebTestClientTest {
     }
 
     @Test
-    void testDetalle() {
+    @Order(2)
+    void testDetalle() throws JsonProcessingException {
+        Cuenta cuenta = new Cuenta(1L, "David", new BigDecimal("900"));
 
         client.get().uri("/api/cuentas/1").exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$.persona").isEqualTo("David")
-                .jsonPath("$.saldo").isEqualTo(1000);
+                .jsonPath("$.saldo").isEqualTo(900)
+        .json(objectMapper.writeValueAsString(cuenta));
     }
 
     @Test
+    @Order(3)
     void testDetalle2() {
 
         client.get().uri("/api/cuentas/2").exchange()
@@ -100,8 +105,8 @@ class CuentaControllerWebTestClientTest {
                 .expectBody(Cuenta.class)
                 .consumeWith(response -> {
                     Cuenta cuenta = response.getResponseBody();
-                    assertEquals("David", cuenta.getPersona());
-                    assertEquals("2000.00", cuenta.getSaldo().toPlainString());
+                    assertEquals("Black", cuenta.getPersona());
+                    assertEquals("2100.00", cuenta.getSaldo().toPlainString());
                 });
 
     }
